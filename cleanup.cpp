@@ -1,5 +1,6 @@
 #include <iostream>
 #include <filesystem>
+#include <regex>
 #include "args.hxx"
 
 int main(int argc, char **argv)
@@ -8,7 +9,8 @@ int main(int argc, char **argv)
     args::ArgumentParser parser("Cleanup can be used to delete files that match certain conditions such as older then X days while keeping one file per X days", "This goes after the options.");
     args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
     args::ValueFlag<std::string> directory(parser, "path", "Directory to begin cleanup.", {'d', "dir"});
-    args::ValueFlag<int> days(parser, "Days", "Number of days between keeping a matching file. This is a required arument.", {'n', "num"});
+    args::ValueFlag<int> days(parser, "Days", "Number of days between NOT deleting a matching file. This is a required arument.", {'n', "num"});
+    args::ValueFlag<std::string> pattern(parser, "Pattern", "A regex pattern to match files for cleanup. Files not matching the pattern will be ignored. If a regex pattern is not provided, all files will be included.", {'p', "pattern"});
     args::Flag testRun(parser, "Test Run", "Perform a 'test run'. Outputs the files that match the condition for deletion without deleting them.", {'t', "test"});
     args::Flag recursive(parser, "Recursive", "Recurse sub-directories", {'r', "recursive"});
 
@@ -39,13 +41,13 @@ int main(int argc, char **argv)
         
         // Check is path exists
         if (!std::filesystem::exists(p)) {
-            std::cerr << "The provided directory does not exist." << std::endl; 
+            std::cerr << "Directory: " << directory.Get() << std::endl << "The provided directory does not exist." << std::endl; 
             return 1;
         }
 
         // Check if path is a directory
         if (!std::filesystem::is_directory(p)) {
-            std::cerr << "The provided path is not a directory." << std::endl; 
+            std::cerr << "Directory: " << directory.Get() << std::endl << "The provided path is not a directory." << std::endl; 
             return 1;
         }
 
@@ -61,6 +63,9 @@ int main(int argc, char **argv)
     }
 
     const int numberOfDays = days.Get();
+
+    std::cout << "path: " << path << std::endl;
+    std::cout << "days: " << numberOfDays << std::endl;
 
     return 0;
 }
