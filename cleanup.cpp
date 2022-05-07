@@ -1,7 +1,17 @@
 #include <iostream>
 #include <filesystem>
 #include <regex>
+#include <stack>
 #include "args.hxx"
+
+bool isValidRegexPattern(const std::string &regex) {
+    try {
+        std::regex re(regex);
+    } catch (const std::regex_error& ) {
+        return false;
+    }
+    return true;
+}
 
 int main(int argc, char **argv)
 {
@@ -15,7 +25,7 @@ int main(int argc, char **argv)
     args::Flag recursive(parser, "Recursive", "Recurse sub-directories", {'r', "recursive"});
 
     // Variables
-    std::filesystem::path path(std::filesystem::current_path());
+    std::stack<std::filesystem::path> paths;
 
     // Parse the arguments
     try {
@@ -51,8 +61,9 @@ int main(int argc, char **argv)
             return 1;
         }
 
-        // Override the default path to the one provided
-        path = p;
+        paths.push(p);
+    } else {
+        paths.push(std::filesystem::path(std::filesystem::current_path()));
     }
 
     // Make sure the number of days was provided
@@ -64,7 +75,13 @@ int main(int argc, char **argv)
 
     const int numberOfDays = days.Get();
 
-    std::cout << "path: " << path << std::endl;
+    if (pattern && !isValidRegexPattern(pattern.Get())) {
+        std::cerr << "The povided regex pattern is invalid." << std::endl; 
+        std::cerr << parser;
+        return 1;
+    }
+
+    std::cout << "path: " << paths.top() << std::endl;
     std::cout << "days: " << numberOfDays << std::endl;
 
     return 0;
