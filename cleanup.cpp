@@ -27,7 +27,7 @@ int Cleanup::parseArguments(int argc, char **argv) {
         parser.ParseCLI(argc, argv);
     } catch (const args::Help&) {
         std::cout << parser;
-        return 0;
+        return 1; // I hate that it return 1 (error) but for now it fixes a bug
     } catch (const args::ParseError& e) {
         std::cerr << "Error parsing arguments." << std::endl << std::endl;
         std::cerr << parser;

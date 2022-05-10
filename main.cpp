@@ -85,5 +85,6 @@ int main(int argc, char **argv)
     // std::cout << "path: " << paths.top() << std::endl;
     // std::cout << "days: " << numberOfDays << std::endl;
     Cleanup clean;
-    return clean.execute(argc, argv);
+    int result = clean.execute(argc, argv);
+    return result;
 }
