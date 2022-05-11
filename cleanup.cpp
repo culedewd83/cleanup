@@ -39,7 +39,7 @@ int Cleanup::parseArguments(int argc, char **argv) {
     }
 
     if (directory) {
-        if (!isValidDirectory(directory.Get())) {
+        if (!is_valid_directory(directory.Get())) {
             std::cerr << "Directory: " << directory.Get() << std::endl << "The provided directory is invalid." << std::endl;
             return 1;
         } else {
@@ -63,10 +63,14 @@ int Cleanup::parseArguments(int argc, char **argv) {
         return 1;
     }
 
+    if (m_isRecursive) {
+        discover_directories_recursive(m_paths.top());
+    }
+
     return 0;
 }
 
-bool Cleanup::isValidDirectory(std::string path) {
+bool Cleanup::is_valid_directory(std::string path) {
     return std::filesystem::exists(path) && std::filesystem::is_directory(path);
 }
 
@@ -77,4 +81,13 @@ bool Cleanup::isValidRegexPattern(const std::string &regex) {
         return false;
     }
     return true;
+}
+
+void Cleanup::discover_directories_recursive(std::filesystem::path dir) {
+    for (const auto & file : std::filesystem::recursive_directory_iterator(dir)) {
+        if (file.is_directory()) {
+            std::cout << "Added: " << file.path() << std::endl;
+            m_paths.push(file.path());
+        }
+    }
 }
