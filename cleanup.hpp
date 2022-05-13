@@ -7,9 +7,9 @@ class Cleanup {
 
 private:
     // Variables
-    bool m_isTestRun;
-    bool m_isRecursive;
-    int  m_daysBetweenDeletion;
+    bool m_is_test_run;
+    bool m_is_recursive;
+    int  m_days_between_deletion;
     std::stack<std::filesystem::path> m_paths;
 
     // Functions

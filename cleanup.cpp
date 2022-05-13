@@ -9,7 +9,7 @@ int Cleanup::execute(int argc, char **argv) {
     }
 
     std::cout << "path: " << m_paths.top() << std::endl;
-    std::cout << "days: " << m_daysBetweenDeletion << std::endl;
+    std::cout << "days: " << m_days_between_deletion << std::endl;
 
     return 0;
 }
@@ -55,7 +55,7 @@ int Cleanup::parseArguments(int argc, char **argv) {
         return 1;
     }
 
-    m_daysBetweenDeletion = days.Get();
+    m_days_between_deletion = days.Get();
 
     if (pattern && !isValidRegexPattern(pattern.Get())) {
         std::cerr << "The povided regex pattern is invalid." << std::endl; 
@@ -63,7 +63,7 @@ int Cleanup::parseArguments(int argc, char **argv) {
         return 1;
     }
 
-    if (m_isRecursive) {
+    if (m_is_recursive) {
         discover_directories_recursive(m_paths.top());
     }
 
@@ -86,7 +86,6 @@ bool Cleanup::isValidRegexPattern(const std::string &regex) {
 void Cleanup::discover_directories_recursive(std::filesystem::path dir) {
     for (const auto & file : std::filesystem::recursive_directory_iterator(dir)) {
         if (file.is_directory()) {
-            std::cout << "Added: " << file.path() << std::endl;
             m_paths.push(file.path());
         }
     }
