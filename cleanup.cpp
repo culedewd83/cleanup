@@ -3,7 +3,7 @@
 #include <regex>
 
 int Cleanup::execute(int argc, char **argv) {
-    int argResult = parseArguments(argc, argv);
+    int argResult = parse_arguments(argc, argv);
     if (argResult != 0) {
         return argResult;
     }
@@ -14,7 +14,7 @@ int Cleanup::execute(int argc, char **argv) {
     return 0;
 }
 
-int Cleanup::parseArguments(int argc, char **argv) {
+int Cleanup::parse_arguments(int argc, char **argv) {
     args::ArgumentParser parser("Cleanup can be used to delete files that match certain conditions such as older then X days while keeping one file per X days", "This goes after the options.");
     args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
     args::ValueFlag<std::string> directory(parser, "path", "Directory to begin cleanup.", {'d', "dir"});
@@ -57,7 +57,7 @@ int Cleanup::parseArguments(int argc, char **argv) {
 
     m_days_between_deletion = days.Get();
 
-    if (pattern && !isValidRegexPattern(pattern.Get())) {
+    if (pattern && !is_valid_regex_pattern(pattern.Get())) {
         std::cerr << "The povided regex pattern is invalid." << std::endl; 
         std::cerr << parser;
         return 1;
@@ -74,7 +74,7 @@ bool Cleanup::is_valid_directory(std::string path) {
     return std::filesystem::exists(path) && std::filesystem::is_directory(path);
 }
 
-bool Cleanup::isValidRegexPattern(const std::string &regex) {
+bool Cleanup::is_valid_regex_pattern(const std::string &regex) {
     try {
         std::regex re(regex);
     } catch (const std::regex_error& ) {

@@ -13,9 +13,9 @@ private:
     std::stack<std::filesystem::path> m_paths;
 
     // Functions
-    int parseArguments(int argc, char **argv);
+    int parse_arguments(int argc, char **argv);
     bool is_valid_directory(std::string path);
-    bool isValidRegexPattern(const std::string &regex);
+    bool is_valid_regex_pattern(const std::string &regex);
     void discover_directories_recursive(std::filesystem::path dir);
 
 public:
