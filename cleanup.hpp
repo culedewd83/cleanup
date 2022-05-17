@@ -10,6 +10,7 @@ private:
     bool m_is_test_run;
     bool m_is_recursive;
     int  m_days_between_deletion;
+    int  m_days_before_deletion;
     std::stack<std::filesystem::path> m_paths;
 
     // Functions
