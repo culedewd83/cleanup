@@ -11,6 +11,7 @@ int Cleanup::execute(int argc, char **argv) {
     std::cout << "path: " << m_paths.top() << std::endl;
     std::cout << "days: " << m_days_between_deletion << std::endl;
     std::cout << "days before to ignore: " << m_days_before_deletion << std::endl;
+    std::cout << "ignore after x days: " << m_ignore_after_num_of_days << std::endl;
 
     return 0;
 }
@@ -21,6 +22,7 @@ int Cleanup::parse_arguments(int argc, char **argv) {
     args::ValueFlag<std::string> directory(parser, "path", "Directory to begin cleanup.", {'d', "dir"});
     args::ValueFlag<int> days(parser, "Days", "Number of days between NOT deleting a matching file. This is a required arument.", {'n', "num"});
     args::ValueFlag<int> days_before(parser, "DaysBefore", "Beginning today, the number of days to ignore before deleting matching files. Default is 0.", {'b', "before"});
+    args::ValueFlag<int> days_after(parser, "DaysAfter", "Ignore (will not delete) all files after this number of days", {'a', "after"});
     args::ValueFlag<std::string> pattern(parser, "Pattern", "A regex pattern to match files for cleanup. Files not matching the pattern will be ignored. If a regex pattern is not provided, all files will be included.", {'p', "pattern"});
     args::Flag test_run(parser, "Test Run", "Perform a 'test run'. Outputs the files that match the condition for deletion without deleting them.", {'t', "test"});
     args::Flag recursive(parser, "Recursive", "Recurse sub-directories", {'r', "recursive"});
@@ -59,8 +61,15 @@ int Cleanup::parse_arguments(int argc, char **argv) {
 
     m_days_between_deletion = days.Get();
 
-    if (days_before) {
-        m_days_before_deletion = days_before.Get();
+    m_days_before_deletion = days_before ? days_before.Get() : 0;
+
+    if (days_after) {
+        m_ignore_after_num_of_days = days_after.Get();
+        if ((m_days_before_deletion == 0 && m_ignore_after_num_of_days < 1) || (m_days_before_deletion > 0 && (m_ignore_after_num_of_days - m_days_before_deletion) < 2)) {
+            std::cerr << "The ignore after days must be more than begin after days" << std::endl; 
+            std::cerr << parser;
+        return 1;
+        }
     }
 
     if (pattern && !is_valid_regex_pattern(pattern.Get())) {

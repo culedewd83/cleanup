@@ -11,6 +11,7 @@ private:
     bool m_is_recursive;
     int  m_days_between_deletion;
     int  m_days_before_deletion;
+    int  m_ignore_after_num_of_days;
     std::stack<std::filesystem::path> m_paths;
 
     // Functions
