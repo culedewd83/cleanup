@@ -22,7 +22,7 @@ int Cleanup::parse_arguments(int argc, char **argv) {
     args::ValueFlag<std::string> directory(parser, "path", "Directory to begin cleanup.", {'d', "dir"});
     args::ValueFlag<int> days(parser, "days", "Number of days between NOT deleting a matching file. This is a required arument.", {'n', "num"});
     args::ValueFlag<int> days_before(parser, "days", "Beginning today, the number of days to ignore before deleting matching files. Default is 0.", {'b', "before"});
-    args::ValueFlag<int> days_after(parser, "days", "Ignore (will not delete) all files after this number of days", {'a', "after"});
+    args::ValueFlag<int> days_after(parser, "days", "Ignore all files after this number of days. When before days is 0, this must be at least 1. When before days is greater than 1, it must be at least 2 more than before days.", {'a', "after"});
     args::ValueFlag<std::string> pattern(parser, "regex pattern", "A regex pattern to match files for cleanup. Files not matching the pattern will be ignored. If a regex pattern is not provided, all files will be included.", {'p', "pattern"});
     args::Flag test_run(parser, "", "Perform a 'test run'. Outputs the files that match the condition for deletion without deleting them.", {'t', "test"});
     args::Flag recursive(parser, "", "Recurse sub-directories", {'r', "recursive"});
