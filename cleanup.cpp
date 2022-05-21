@@ -18,14 +18,14 @@ int Cleanup::execute(int argc, char **argv) {
 
 int Cleanup::parse_arguments(int argc, char **argv) {
     args::ArgumentParser parser("Cleanup can be used to delete files that match certain conditions such as older then X days while keeping one file per X days", "This goes after the options.");
-    args::HelpFlag help(parser, "help", "Display this help menu", {'h', "help"});
+    args::HelpFlag help(parser, "", "Display this help menu", {'h', "help"});
     args::ValueFlag<std::string> directory(parser, "path", "Directory to begin cleanup.", {'d', "dir"});
-    args::ValueFlag<int> days(parser, "Days", "Number of days between NOT deleting a matching file. This is a required arument.", {'n', "num"});
-    args::ValueFlag<int> days_before(parser, "DaysBefore", "Beginning today, the number of days to ignore before deleting matching files. Default is 0.", {'b', "before"});
-    args::ValueFlag<int> days_after(parser, "DaysAfter", "Ignore (will not delete) all files after this number of days", {'a', "after"});
-    args::ValueFlag<std::string> pattern(parser, "Pattern", "A regex pattern to match files for cleanup. Files not matching the pattern will be ignored. If a regex pattern is not provided, all files will be included.", {'p', "pattern"});
-    args::Flag test_run(parser, "Test Run", "Perform a 'test run'. Outputs the files that match the condition for deletion without deleting them.", {'t', "test"});
-    args::Flag recursive(parser, "Recursive", "Recurse sub-directories", {'r', "recursive"});
+    args::ValueFlag<int> days(parser, "days", "Number of days between NOT deleting a matching file. This is a required arument.", {'n', "num"});
+    args::ValueFlag<int> days_before(parser, "days", "Beginning today, the number of days to ignore before deleting matching files. Default is 0.", {'b', "before"});
+    args::ValueFlag<int> days_after(parser, "days", "Ignore (will not delete) all files after this number of days", {'a', "after"});
+    args::ValueFlag<std::string> pattern(parser, "regex pattern", "A regex pattern to match files for cleanup. Files not matching the pattern will be ignored. If a regex pattern is not provided, all files will be included.", {'p', "pattern"});
+    args::Flag test_run(parser, "", "Perform a 'test run'. Outputs the files that match the condition for deletion without deleting them.", {'t', "test"});
+    args::Flag recursive(parser, "", "Recurse sub-directories", {'r', "recursive"});
 
     try {
         parser.ParseCLI(argc, argv);
