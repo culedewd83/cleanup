@@ -3,6 +3,13 @@
 #include <regex>
 
 int Cleanup::execute(int argc, char **argv) {
+    // auto now = time(NULL);
+    // auto* tm = localtime(&now);
+    // tm->tm_mday += 14;
+    // auto later = mktime(tm);
+    // char* dt = ctime(&later);
+    // std::cout << "The current local date and time is: " << dt << std::endl;
+
     int argResult = parse_arguments(argc, argv);
     if (argResult != 0) {
         return argResult;
@@ -82,6 +89,11 @@ int Cleanup::parse_arguments(int argc, char **argv) {
         discover_directories_recursive(m_paths.top());
     }
 
+    while (m_paths.size() > 0) {
+        match_and_delete(m_paths.top());
+        m_paths.pop();
+    }
+
     return 0;
 }
 
@@ -103,5 +115,22 @@ void Cleanup::discover_directories_recursive(std::filesystem::path dir) {
         if (file.is_directory()) {
             m_paths.push(file.path());
         }
+    }
+}
+
+void Cleanup::match_and_delete(std::filesystem::path& path) {
+    for (auto& file : std::filesystem::directory_iterator(path)) {
+        std::cout << file << std::endl;
+        // try {
+        //     if (!file.is_directory() && file.is_regular_file()) {
+        //         try {
+        //          std::cout << file << std::endl;
+        //         } catch (...) {
+
+        //         }
+        //     }
+        // } catch (...) {
+
+        // }
     }
 }
